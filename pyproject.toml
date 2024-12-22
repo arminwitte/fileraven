@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fileraven"
+version = "0.1.0"
+authors = [
+  { name = "Your Name", email = "your.email@example.com" },
+]
+description = "A document Q&A system using RAG with Streamlit and FastAPI"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "fastapi>=0.104.1",
+    "uvicorn>=0.24.0",
+    "streamlit>=1.28.2",
+    "python-multipart>=0.0.6",
+    "sentence-transformers>=2.2.2",
+    "chromadb>=0.4.18",
+    "markitdown>=0.1.14",
+    "httpx>=0.25.2",
+    "python-dotenv>=1.0.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/arminwitte/fileraven"
+"Bug Tracker" = "https://github.com/arminwitte/fileraven/issues"
+
+[project.scripts]
+fileraven-api = "fileraven.backend.main:main"
+fileraven-ui = "fileraven.frontend.streamlit_app:main"
