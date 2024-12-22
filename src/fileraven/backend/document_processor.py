@@ -1,4 +1,4 @@
-from markitdown import MarkitDown
+from markitdown import MarkItDown
 import os
 from typing import Union
 import tempfile
@@ -22,7 +22,7 @@ def process_document(content: Union[bytes, str], filename: str) -> str:
         temp_path = temp_file.name
     
     try:
-        converter = MarkitDown()
+        converter = MarkItDown()
         markdown_text = converter.convert(temp_path)
         return markdown_text
     finally:
