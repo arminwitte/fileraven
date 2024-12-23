@@ -22,9 +22,9 @@ def process_document(content: Union[bytes, str], filename: str) -> str:
         temp_path = temp_file.name
     
     try:
-        converter = MarkItDown()
-        markdown_text = converter.convert(temp_path)
-        return markdown_text
+        md = MarkItDown()
+        result = md.convert(temp_path)
+        return result.text_content
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)
