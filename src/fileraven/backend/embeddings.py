@@ -16,8 +16,8 @@ class Embedder:
     
     def __init__(
         self,
-        chunk_size: int = 512,
-        chunk_overlap_size: int = 64,
+        chunk_size: int = 256,
+        chunk_overlap_size: int = 32,
         model_name: str = "all-MiniLM-L6-v2" # "paraphrase-multilingual-mpnet-base-v2"
     ):
         self.chunk_size = chunk_size

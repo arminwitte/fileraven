@@ -4,7 +4,7 @@ import numpy as np
 
 class VectorStore:
     def __init__(self):
-        self.client = chromadb.PersistentClient(path=".cromadb")
+        self.client = chromadb.PersistentClient(path=".chroma")
         self.collection = self.client.get_or_create_collection("documents")
     
     def add_embeddings(self, embeddings_data: dict, source_text: str):
