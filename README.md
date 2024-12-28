@@ -1,6 +1,11 @@
-FileRaven 🦅
+# FileRaven 🦅
 
 FileRaven is a powerful document Q&A system that uses Retrieval-Augmented Generation (RAG) to provide intelligent answers to questions about your documents.
+
+```mermaid
+graph TD
+A[Document] --> B[Embedding]
+```
 
 ## Features
 
