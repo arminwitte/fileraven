@@ -4,9 +4,9 @@ FileRaven is a powerful document Q&A system that uses Retrieval-Augmented Genera
 
 ```mermaid
 flowchart LR;
-    A[Document] --> B;
-    B[markdown text] -|embedding|-> C;
-    C[Vector] --> C[ChromaDB];
+    A[Document] --> B[markdown text];
+    B -- embedding --> C[Vector];
+    C --> D[ChromaDB];
 ```
 
 ## Features
