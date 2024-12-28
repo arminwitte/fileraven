@@ -3,8 +3,10 @@
 FileRaven is a powerful document Q&A system that uses Retrieval-Augmented Generation (RAG) to provide intelligent answers to questions about your documents.
 
 ```mermaid
-graph LR;
-    A[Document]--> B[Embedding];
+flowchart LR;
+    A[Document] --> B;
+    B[markdown text] -|embedding|-> C;
+    C[Vector] --> C[ChromaDB];
 ```
 
 ## Features
