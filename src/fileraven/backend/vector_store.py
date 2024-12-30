@@ -12,7 +12,7 @@ class VectorStore:
         Add embeddings to ChromaDB
         """
         self.collection.add(
-            embeddings=embeddings_data['embeddings'].tolist(),
+            embeddings=embeddings_data['embeddings'],
             documents=embeddings_data['chunks'],
             metadatas=[{"source": source_text} for _ in embeddings_data['chunks']],
             ids=[f"id_{i}" for i in range(len(embeddings_data['chunks']))]

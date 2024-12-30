@@ -24,7 +24,7 @@ Please provide a response based on the context above. The answer should be short
                 "prompt": prompt,
                 "stream": False
             },
-            timeout=60.0,
+            timeout=600.0,
         )
 
         print(response)

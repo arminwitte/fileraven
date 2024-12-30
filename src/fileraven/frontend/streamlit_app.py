@@ -39,7 +39,7 @@ def main():
     uploaded_file = st.file_uploader("Upload a document", type=["pdf", "docx", "txt"])
     if uploaded_file:
         files = {"file": (uploaded_file.name, uploaded_file.getvalue())}
-        response = client.post("/upload", files=files, timeout=30)
+        response = client.post("/upload", files=files, timeout=600.0)
         
         if response.status_code == 200:
             st.success("Document processed successfully!")
@@ -63,7 +63,7 @@ def main():
             st.markdown(prompt)
         
         # Get response
-        response = client.post("/query", json={"question": prompt}, timeout=61.0)
+        response = client.post("/query", json={"question": prompt}, timeout=630.0)
         
         if response.status_code == 200:
             assistant_response = response.json()["response"]
