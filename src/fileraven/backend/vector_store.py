@@ -18,7 +18,7 @@ class VectorStore:
             ids=[f"id_{i}" for i in range(len(embeddings_data['chunks']))]
         )
     
-    def search(self, query: str, n_results: int = 3):
+    def search(self, query: str, n_results: int = 10):
         """
         Search for relevant context using the query
         """
@@ -27,4 +27,4 @@ class VectorStore:
             n_results=n_results
         )
         
-        return " ".join(results['documents'][0])
+        return "\n".join(results['documents'][0])

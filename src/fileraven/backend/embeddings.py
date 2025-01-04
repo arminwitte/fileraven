@@ -17,7 +17,7 @@ class Embedder:
     
     def __init__(
         self,
-        chunk_size: int = 256,
+        chunk_size: int = 228,
         overlap_size: int = 32,
         model_name: str = "all-MiniLM-L6-v2"
     ):
@@ -175,9 +175,11 @@ class Embedder:
             for chunk in final_chunks
         ]
 
-        for chunk in final_chunks:
-            print("----------------- CHUNK ---------------------")
-            print(chunk)
+        # for chunk in final_chunks:
+        #     print("----------------- CHUNK ---------------------")
+        #     print(chunk)
+
+        print(f"Number of chunks: {len(final_chunks)}")
         
         return {
             'chunks': final_chunks,
