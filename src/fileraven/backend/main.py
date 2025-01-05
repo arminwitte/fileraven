@@ -38,7 +38,7 @@ async def upload_document(file: UploadFile = File(...)):
     """Upload and process a document"""
 
     # store the uploaded file 
-    storage_file_path = file_clerk.store(file)
+    storage_file_path, _ = file_clerk.store(file)
 
     # read file content and transform to markdown
     content = await file.read()
