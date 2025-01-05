@@ -5,6 +5,7 @@ from typing import List
 import uvicorn
 
 from fileraven.backend.document_processor import process_document
+from fileraven.backend.file_clerk import FileClerk
 from fileraven.backend.embeddings import Embedder
 from fileraven.backend.vector_store import VectorStore
 from fileraven.backend.rag_engine import RAGEngine
@@ -27,6 +28,7 @@ app.add_middleware(
 vector_store = VectorStore()
 rag_engine = RAGEngine()
 embedder = Embedder()
+file_clerk = FileClerk()
 
 class Query(BaseModel):
     question: str
@@ -34,9 +36,15 @@ class Query(BaseModel):
 @app.post("/upload")
 async def upload_document(file: UploadFile = File(...)):
     """Upload and process a document"""
+
+    # store the uploaded file 
+    storage_file_path = file_clerk.store(file)
+
+    # read file content and transform to markdown
     content = await file.read()
     markdown_text = process_document(content, file.filename)
     
+    # compute embeddings and store in vector database 
     embeddings = embedder.get_embeddings(markdown_text)
     vector_store.add_embeddings(embeddings, markdown_text)
     
