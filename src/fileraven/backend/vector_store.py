@@ -27,4 +27,4 @@ class VectorStore:
             n_results=n_results
         )
         
-        return "\n".join(results['documents'][0])
+        return "\n".join(results['documents'][0]), "\n".join(set(results['metadatas']['source']))

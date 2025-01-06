@@ -38,15 +38,17 @@ async def upload_document(file: UploadFile = File(...)):
     """Upload and process a document"""
 
     # store the uploaded file 
-    storage_file_path, _ = file_clerk.store(file)
-
+    storage_file_path, _ = await file_clerk.store(file)
+    await file.seek(0)
+    # storage_file_path = ""
+    
     # read file content and transform to markdown
     content = await file.read()
     markdown_text = process_document(content, file.filename)
     
     # compute embeddings and store in vector database 
     embeddings = embedder.get_embeddings(markdown_text)
-    vector_store.add_embeddings(embeddings, markdown_text)
+    vector_store.add_embeddings(embeddings, storage_file_path)
     
     return {"message": "Document processed successfully"}
 

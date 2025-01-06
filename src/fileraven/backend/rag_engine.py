@@ -20,7 +20,7 @@ Please provide a response based on the context above. The answer should be short
         response = httpx.post(
             self.ollama_url,
             json={
-                "model": "llama3.2:1b",
+                "model": "llama3.2",
                 "prompt": prompt,
                 "stream": False
             },
