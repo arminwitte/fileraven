@@ -55,8 +55,8 @@ async def upload_document(file: UploadFile = File(...)):
 @app.post("/query")
 async def query(query: Query):
     """Query the document database"""
-    context = vector_store.search(query.question)
-    response = rag_engine.generate_response(query.question, context)
+    context, sources = vector_store.search(query.question)
+    response = rag_engine.generate_response(query.question, context, sources)
     
     return {"response": response}
 

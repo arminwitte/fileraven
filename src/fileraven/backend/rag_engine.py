@@ -4,7 +4,7 @@ class RAGEngine:
     def __init__(self):
         self.ollama_url = "http://localhost:11434/api/generate"
         
-    def generate_response(self, query: str, context: str):
+    def generate_response(self, query: str, context: str, source: str):
         """
         Generate response using Ollama with RAG context
         """
@@ -12,9 +12,14 @@ class RAGEngine:
 
 Question: {query}
 
-Please provide a response based on the context above. The answer should be short and concise. If the context doesn't contain relevant information, please say so."""
+Sources: {source}
+
+Please provide a response based on the context above.
+The answer should be short and concise.
+If the context doesn't contain relevant information, please say so.
+Finally, if applicable, add the files listed under sources as a markdown formated list of links to the local files at the bottom of the response."""
         
-        print(prompt)
+        # print(prompt)
 
         # Call Ollama API
         response = httpx.post(

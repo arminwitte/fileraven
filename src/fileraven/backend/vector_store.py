@@ -26,5 +26,9 @@ class VectorStore:
             query_texts=[query],
             n_results=n_results
         )
+
+        print(results["metadatas"])
         
-        return "\n".join(results['documents'][0]), "\n".join(set(results['metadatas']['source']))
+        sources = [d.get("source",'') for d in results['metadatas'][0]]
+
+        return "\n".join(results['documents'][0]), ", ".join(set(sources))
