@@ -31,4 +31,4 @@ class VectorStore:
         
         sources = [d.get("source",'') for d in results['metadatas'][0]]
 
-        return "\n".join(results['documents'][0]), ", ".join(set(sources))
+        return results['documents'][0], sources

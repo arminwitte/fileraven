@@ -67,9 +67,20 @@ def main():
         
         if response.status_code == 200:
             assistant_response = response.json()["response"]
+            assistant_sources = response.json()["sources"]
             st.session_state.messages.append({"role": "assistant", "content": assistant_response})
             with st.chat_message("assistant"):
                 st.markdown(assistant_response)
+                for source in set(assistant_sources):
+                    filepath = os.path.join(source)
+                    filename = os.path.basename(filepath)
+                    with open(filepath, 'rb') as f:
+                        # st.download_button('Download Docx', f, file_name='New_File.docx')
+                        st.download_button(
+                            label=filename,
+                            data=f,
+                            file_name=filename,
+)
         else:
             st.error("Error getting response from backend")
 

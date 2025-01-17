@@ -14,7 +14,7 @@ Question: {query}
 
 Sources: {source}
 
-Please provide a response based on the context above.
+Please provide a response based on the context chunks (separated by dashes) above.
 The answer should be short and concise.
 If the context doesn't contain relevant information, please say so.
 Finally, if applicable, add the files listed under sources as a markdown formated list of links to the local files at the bottom of the response."""

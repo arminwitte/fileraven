@@ -56,9 +56,14 @@ async def upload_document(file: UploadFile = File(...)):
 async def query(query: Query):
     """Query the document database"""
     context, sources = vector_store.search(query.question)
-    response = rag_engine.generate_response(query.question, context, sources)
+
+    print(context)
+    context_str = "\n----------\n".join(context)
+    sources_str = ", ".join(set(sources))
+
+    response = rag_engine.generate_response(query.question, context_str, sources_str)
     
-    return {"response": response}
+    return {"response": response, "sources": sources}
 
 def main():
     """Run the FastAPI application"""
