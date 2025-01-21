@@ -59,9 +59,9 @@ async def query(query: Query):
 
     print(context)
     context_str = "\n----------\n".join(context)
-    sources_str = ", ".join(set(sources))
+    # sources_str = ", ".join(set(sources))
 
-    response = rag_engine.generate_response(query.question, context_str, sources_str)
+    response = rag_engine.generate_response(query.question, context_str)
     
     return {"response": response, "sources": sources}
 

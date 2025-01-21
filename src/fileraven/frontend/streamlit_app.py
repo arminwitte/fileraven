@@ -2,6 +2,7 @@ import streamlit as st
 import httpx
 from typing import List
 import os
+import uuid
 
 from fileraven.frontend.api_check import assert_api_available
 
@@ -71,7 +72,9 @@ def main():
             st.session_state.messages.append({"role": "assistant", "content": assistant_response})
             with st.chat_message("assistant"):
                 st.markdown(assistant_response)
-                for source in set(assistant_sources):
+                sources = set(assistant_sources)
+                for source in sources:
+                    print(source)
                     filepath = os.path.join(source)
                     filename = os.path.basename(filepath)
                     with open(filepath, 'rb') as f:
@@ -80,6 +83,7 @@ def main():
                             label=filename,
                             data=f,
                             file_name=filename,
+                            key=uuid.uuid1(),
 )
         else:
             st.error("Error getting response from backend")

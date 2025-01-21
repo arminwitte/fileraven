@@ -1,6 +1,7 @@
 import chromadb
 from chromadb.config import Settings
 import numpy as np
+import uuid
 
 class VectorStore:
     def __init__(self):
@@ -11,11 +12,12 @@ class VectorStore:
         """
         Add embeddings to ChromaDB
         """
+        id_ = uuid.uuid1()
         self.collection.add(
             embeddings=embeddings_data['embeddings'],
             documents=embeddings_data['chunks'],
             metadatas=[{"source": source_text} for _ in embeddings_data['chunks']],
-            ids=[f"id_{i}" for i in range(len(embeddings_data['chunks']))]
+            ids=[f"{id_}-{i}" for i in range(len(embeddings_data['chunks']))]
         )
     
     def search(self, query: str, n_results: int = 10):
