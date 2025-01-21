@@ -38,7 +38,8 @@ def main():
 
     # File upload
     uploaded_file = st.file_uploader("Upload a document", type=["pdf", "docx", "txt"])
-    if uploaded_file:
+    button_send = st.button("Send to database", use_container_width=True)
+    if uploaded_file and button_send:
         files = {"file": (uploaded_file.name, uploaded_file.getvalue())}
         response = client.post("/upload", files=files, timeout=600.0)
         
