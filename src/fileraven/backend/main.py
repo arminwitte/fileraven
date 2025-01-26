@@ -48,7 +48,7 @@ async def upload_document(file: UploadFile = File(...)):
     
     # compute embeddings and store in vector database 
     embeddings = embedder.get_embeddings(markdown_text)
-    vector_store.add_embeddings(embeddings, storage_file_path)
+    vector_store.add_unique_embeddings(embeddings, storage_file_path)
     
     return {"message": "Document processed successfully"}
 
