@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 # Assuming AsyncQueryExpander is imported from the previous module
-from async_query_expander import AsyncQueryExpander
+from fileraven.frontend.async_query_expander import AsyncQueryExpander
 
 @dataclass
 class QuerySession:
@@ -26,12 +26,10 @@ class QueryExplorer:
     def __init__(
         self,
         api_endpoint: str,
-        height: int = 600,
-        on_sources_click: Optional[callable] = None
+        height: int = 600
     ):
         self.api_endpoint = api_endpoint
         self.height = height
-        self.on_sources_click = on_sources_click
         
         # Initialize session state
         if 'query_session' not in st.session_state:
@@ -54,12 +52,12 @@ class QueryExplorer:
             )
         
         with col2:
-            execute_pressed = st.button("Execute", use_container_width=True)
+            execute_pressed = st.button("Send", use_container_width=True)
             
         if execute_pressed and query:
             self.add_query(query)
             # Clear the input
-            st.session_state.query_input = ""
+            # st.session_state.query_input = ""
             # Trigger rerun to update interface
             st.rerun()
 
@@ -81,8 +79,7 @@ class QueryExplorer:
                 expander = AsyncQueryExpander(
                     query=query,
                     api_endpoint=self.api_endpoint,
-                    key=key,
-                    on_sources_click=self.on_sources_click
+                    key=key
                 )
                 expander.render()
                 
@@ -107,7 +104,6 @@ def main():
     explorer = QueryExplorer(
         api_endpoint="http://api.example.com/query",
         height=500,
-        on_sources_click=handle_sources
     )
     
     explorer.render()

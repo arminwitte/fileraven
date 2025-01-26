@@ -5,11 +5,14 @@ from typing import Optional, Any
 from dataclasses import dataclass
 from contextlib import contextmanager
 
+from fileraven.frontend.download_dialog import download_sources
+
 @dataclass
 class QueryState:
     """Stores the state of a query execution"""
-    is_loading: bool = False
-    response: Optional[Any] = None
+    posted: bool = False
+    response: Optional[str] = None
+    sources: Optional[list] = None
     error: Optional[str] = None
 
 class AsyncQueryExpander:
@@ -25,27 +28,47 @@ class AsyncQueryExpander:
         self,
         query: str,
         api_endpoint: str,
-        key: str,
-        on_sources_click: Optional[callable] = None
+        key: str
     ):
         self.query = query
         self.api_endpoint = api_endpoint
         self.key = key
-        self.on_sources_click = on_sources_click
+        self.state = QueryState()
         
         # Initialize session state for this instance
         if f"query_state_{key}" not in st.session_state:
             st.session_state[f"query_state_{key}"] = QueryState()
 
-    @contextmanager
-    def loading_state(self):
-        """Context manager to handle loading state"""
-        state = st.session_state[f"query_state_{self.key}"]
-        state.is_loading = True
-        try:
-            yield
-        finally:
-            state.is_loading = False
+        if not self.state.posted:
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+            
+            loop.create_task(self.background_task())
+            self.state.posted = True
+
+    def render(self):
+        with st.expander(f"{self.query}", expanded=True):
+            if self.state.response:
+                st.markdown(self.state.response)
+
+            if self.state.error:
+                st.error(f"Error: {self.state.error}")
+                
+            # Sources button
+            if self.state.sources:
+                if button_sources := st.button(
+                    "Sources",
+                    key=f"sources_btn_{self.key}",
+                ):
+                    download_sources(self.state.sources)
+
+    async def background_task(self):
+        await self.fetch_data()
+        # Force a rerun to update the UI
+        st.rerun()
 
     async def fetch_data(self):
         """Fetch data from the API endpoint"""
@@ -55,75 +78,14 @@ class AsyncQueryExpander:
             try:
                 response = await client.post(
                     self.api_endpoint,
-                    json={"query": self.query},
-                    timeout=30.0
+                    json={"question": self.query},
+                    timeout=630.0
                 )
                 response.raise_for_status()
-                state.response = response.json()
+                state.response = response.json()["response"]
+                state.sources = response.json()["sources"]
                 state.error = None
             except Exception as e:
                 state.error = str(e)
                 state.response = None
-
-    def render(self):
-        """Render the component"""
-        state = st.session_state[f"query_state_{self.key}"]
-        
-        with st.expander(f"Query: {self.query}", expanded=True):
-            # Create a container for the response section
-            response_container = st.container()
-            
-            with response_container:
-                if state.is_loading:
-                    # Center the spinner using columns
-                    col1, col2, col3 = st.columns([1, 2, 1])
-                    with col2:
-                        st.spinner("Executing query...")
-                        st.caption("This may take a few moments...")
-            
-            if state.error:
-                st.error(f"Error: {state.error}")
-            
-            if state.response:
-                st.json(state.response)
-                
-                # Sources button
-                if st.button(
-                    "Sources",
-                    key=f"sources_btn_{self.key}",
-                    on_click=self.on_sources_click if self.on_sources_click else None
-                ):
-                    if not self.on_sources_click:
-                        st.info("Sources callback not configured")
-            
-            # Execute button (only show if no response or error)
-            if not state.response and not state.error and not state.is_loading:
-                if st.button("Execute Query", key=f"execute_btn_{self.key}"):
-                    with self.loading_state():
-                        asyncio.run(self.fetch_data())
-
-# Example usage:
-def main():
-    st.title("Query Explorer")
-    
-    # Example sources handler
-    def handle_sources():
-        st.write("Displaying sources...")
-    
-    # Create multiple query expanders
-    queries = [
-        ("SELECT * FROM users", "http://api.example.com/query1"),
-        ("SELECT * FROM orders", "http://api.example.com/query2")
-    ]
-    
-    for i, (query, endpoint) in enumerate(queries):
-        expander = AsyncQueryExpander(
-            query=query,
-            api_endpoint=endpoint,
-            key=f"query_{i}",
-            on_sources_click=handle_sources
-        )
-        expander.render()
-
-if __name__ == "__main__":
-    main()
+                state.sources = None

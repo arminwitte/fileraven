@@ -5,7 +5,7 @@ import os
 import uuid
 
 from fileraven.frontend.api_check import assert_api_available
-from fileraven.frontend.download_dialog import download_file
+from fileraven.frontend.download_dialog import download_sources
 
 @st.dialog("API Availability")
 def check_api():
@@ -80,6 +80,8 @@ def main():
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
+            if "sources" in message:
+                st.button("Sources", key=uuid.uuid1() , on_click=download_sources, args=(message["sources"],))
 
     # Chat input
     if prompt := st.chat_input("Ask a question about your documents"):
@@ -93,11 +95,13 @@ def main():
         
         if response.status_code == 200:
             assistant_response = response.json()["response"]
-            assistant_sources = response.json()["sources"]
-            st.session_state.messages.append({"role": "assistant", "content": assistant_response})
-            st.session_state.sources.update(assistant_sources)
+            assistant_sources = set(response.json()["sources"])
+            st.session_state.messages.append({"role": "assistant", "content": assistant_response, "sources": assistant_sources})
+            # st.session_state.sources.update(assistant_sources)
             with st.chat_message("assistant"):
                 st.markdown(assistant_response)
+                if assistant_sources:
+                    st.button("Sources", key=uuid.uuid1() , on_click=download_sources, args=(assistant_sources,))
                 # sources = set(assistant_sources)
                 # for source in sources:
                 #     print(source)
