@@ -64,11 +64,6 @@ def main():
         if button_upload_file:
             upload_file(client)
 
-    with st.sidebar:
-        button_download_file = st.button("\u2B07 \uFE0F Download a document", use_container_width=True)
-        if button_download_file:
-            download_file()
-
     # Chat interface
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -97,23 +92,10 @@ def main():
             assistant_response = response.json()["response"]
             assistant_sources = set(response.json()["sources"])
             st.session_state.messages.append({"role": "assistant", "content": assistant_response, "sources": assistant_sources})
-            # st.session_state.sources.update(assistant_sources)
             with st.chat_message("assistant"):
                 st.markdown(assistant_response)
                 if assistant_sources:
                     st.button("Sources", key=uuid.uuid1() , on_click=download_sources, args=(assistant_sources,))
-                # sources = set(assistant_sources)
-                # for source in sources:
-                #     print(source)
-                #     filepath = os.path.join(source)
-                #     filename = os.path.basename(filepath)
-                #     with open(filepath, 'rb') as f:
-                #         # st.download_button('Download Docx', f, file_name='New_File.docx')
-                #         st.download_button(
-                #             label=filename,
-                #             data=f,
-                #             file_name=filename,
-                #             key=uuid.uuid1(),
 # )
         else:
             st.error("Error getting response from backend")
