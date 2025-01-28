@@ -1,9 +1,10 @@
 import httpx
 
+
 class RAGEngine:
     def __init__(self):
         self.ollama_url = "http://localhost:11434/api/generate"
-        
+
     def generate_response(self, query: str, context: str):
         """
         Generate response using Ollama with RAG context
@@ -16,7 +17,7 @@ Please provide a response based on the context chunks (separated by dashes) abov
 If the answer is not stated in the context directly, try to infer it from the context stating that you did so.
 The answer should be short and concise.
 If the context doesn't contain relevant information, please say so."""
-        
+
         # print(prompt)
 
         # Call Ollama API
@@ -27,11 +28,11 @@ If the context doesn't contain relevant information, please say so."""
                 # "model": "mistral-cpu",
                 "model": "llama3.2:1b",
                 "prompt": prompt,
-                "stream": False
+                "stream": False,
             },
             timeout=600.0,
         )
 
         print(response)
-        
+
         return response.json()["response"]

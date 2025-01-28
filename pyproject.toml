@@ -35,3 +35,12 @@ dependencies = [
 [project.scripts]
 fileraven-api = "fileraven.backend.main:main"
 fileraven-ui = "fileraven.frontend.streamlit_app:main"
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+# line-length = 119
+
+
+
