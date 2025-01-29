@@ -1,9 +1,12 @@
 import httpx
+import os
 
+# Configure API client
+OLLAMA_URL = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 
 class RAGEngine:
     def __init__(self):
-        self.ollama_url = "http://localhost:11434/api/generate"
+        self.ollama_url = OLLAMA_URL + "/api/generate"
 
     def generate_response(self, query: str, context: str):
         """

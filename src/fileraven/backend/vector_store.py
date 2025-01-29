@@ -50,12 +50,13 @@ class VectorStore:
                 unique_ids.append(id_)
 
         # Add unique embeddings to collection
-        self.collection.add(
-            embeddings=unique_embeddings,
-            documents=unique_documents,
-            metadatas=unique_metadatas,
-            ids=unique_ids,
-        )
+        if unique_embeddings:
+            self.collection.add(
+                embeddings=unique_embeddings,
+                documents=unique_documents,
+                metadatas=unique_metadatas,
+                ids=unique_ids,
+            )
 
     def search(self, query: str, n_results: int = 10):
         """

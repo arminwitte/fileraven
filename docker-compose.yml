@@ -1,0 +1,49 @@
+networks:
+  fileraven-net:    # Define the network
+    driver: bridge
+
+volumes:
+  ollama_models:    # Named volume for Ollama models
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    networks:
+      - fileraven-net    # Add to network
+    volumes:
+      - ollama_models:/root/.ollama
+    ports:
+      - "11434:11434"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  backend:
+    build:
+      context: .          # Set context to root directory where pyproject.toml is
+      dockerfile: src/fileraven/backend/Dockerfile
+    networks:
+      - fileraven-net    # Add to network
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/code/data
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    depends_on:
+      - ollama
+
+  frontend:
+    build:
+      context: .          # Set context to root directory where pyproject.toml is
+      dockerfile: src/fileraven/frontend/Dockerfile
+    networks:
+      - fileraven-net    # Add to network
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://backend:8000
+    depends_on:
+      - backend

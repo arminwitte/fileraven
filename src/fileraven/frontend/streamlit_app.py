@@ -10,6 +10,9 @@ from fileraven.frontend.api_check import assert_api_available
 from fileraven.frontend.download_dialog import download_sources
 
 
+# Configure API client
+API_URL = os.getenv("API_URL", "http://localhost:8000")
+
 @st.dialog("API Availability")
 def check_api():
 
@@ -60,8 +63,6 @@ def main():
         if button_check_api:
             check_api()
 
-    # Configure API client
-    API_URL = os.getenv("FILERAVEN_API_URL", "http://localhost:8000")
     client = httpx.Client(base_url=API_URL)
 
     st.title("FileRaven - Document Q&A System")
